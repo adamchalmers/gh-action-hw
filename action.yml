@@ -2,9 +2,9 @@
 name: 'Setup Protoc'
 description: 'Download protoc from GitHub releases'
 inputs:
-  protoc-version:
-    description: 'Version to use. Example: 3.9.1'
-    default: '3.x'
+  tag:
+    description: 'Git tag for the version to download. Example: v3.9.1'
+    default: ''
   include-pre-releases:
     description: 'Include github pre-releases in latest version calculation'
     default: 'false'
@@ -18,15 +18,15 @@ inputs:
     description: 'Which OS? Either "windows" or "linux" or "macos"'
     default: 'linux'
 outputs:
-  protoc-version: 
-    description: 'The version chosen.'
   path:
     description: 'Where protoc was installed.'
+  url:
+    description: 'The URL that protoc was downloaded from.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.protoc-version }}
+    - ${{ inputs.tag }}
     - ${{ inputs.include-pre-releases }}
     - ${{ inputs.repo-token }}
     - ${{ inputs.os-arch }}

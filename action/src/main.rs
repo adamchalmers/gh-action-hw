@@ -1,4 +1,6 @@
+use std::io::Write;
 use std::process::exit;
+
 mod config;
 mod installer;
 mod unused;
@@ -16,15 +18,28 @@ async fn main() {
     };
 
     let write_to = std::path::Path::new("/output/protoc");
-    match installer::get_protoc(cfg, write_to).await {
-        Ok(version) => {
-            println!("::set-output name=protoc-version::{version}");
-            println!("::set-output name=path::{}", write_to.display());
-        }
+    let (url, bytes) = match installer::get_protoc(cfg).await {
+        Ok(x) => x,
         Err(err) => {
             eprintln!("{err}");
             exit(1);
         }
+    };
+    // Finish downloading the file, and write it to the filesystem.
+    let mut file = match std::fs::File::create(write_to) {
+        Ok(f) => f,
+        Err(err) => {
+            eprintln!("{err}");
+            exit(1);
+        }
+    };
+    if let Err(err) = file.write_all(&bytes) {
+        eprintln!("{err}");
+        exit(1);
     }
+
+    println!("::set-output name=url::{url}");
+    println!("::set-output name=path::{}", write_to.display());
+
     println!("Success");
 }

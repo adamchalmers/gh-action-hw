@@ -7,10 +7,6 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.65"
-false = "0.0.0"
-regex = "1.6.0"
+bytes = "1.2.1"
 reqwest = { version = "0.11.12", use-default-features = false, features = ["json"] }
-semver = "1.0.14"
-serde = { version = "1.0.145", features = ["derive"] }
-serde_json = "1.0.85"
 tokio = { version = "1.21.1", features = ["macros", "net", "rt"] }
