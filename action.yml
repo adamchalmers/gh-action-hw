@@ -1,16 +1,33 @@
 # action.yml
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Setup Protoc'
+description: 'Download protoc from GitHub releases'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
+  protoc-version:
+    description: 'Version to use. Example: 3.9.1'
+    default: '3.x'
+  include-pre-releases:
+    description: 'Include github pre-releases in latest version calculation'
+    default: 'false'
+  repo-token:
+    description: 'GitHub repo token to use to avoid rate limiter'
+    default: ''
+  os-arch:
+    description: 'Which OS? Windows ("32", "64") or macOS ("aarch_64", "x86_64") or Linux (macOS options as well as "ppcle_64", "s390_64", "x86_32")'
+    default: 'x86_64'
+  os-plat:
+    description: 'Which OS? Either "windows" or "linux" or "macos"'
+    default: 'linux'
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  protoc-version: 
+    description: 'The version chosen.'
+  path:
+    description: 'Where protoc was installed.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.who-to-greet }}
+    - ${{ inputs.protoc-version }}
+    - ${{ inputs.include-pre-releases }}
+    - ${{ inputs.repo-token }}
+    - ${{ inputs.os-arch }}
+    - ${{ inputs.os-plat }}

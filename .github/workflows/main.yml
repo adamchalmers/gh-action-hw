@@ -3,13 +3,14 @@ on: [push]
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Compile prost
     steps:
-      - name: Hello world action step
-        id: hello
-        uses: adamchalmers/gh-action-hw@v1
+      - name: Install protoc
+        id: install-protoc
+        uses: adamchalmers/gh-action-hw@v2
         with:
-          who-to-greet: 'Leonidas'
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+          protoc-version: 3.20
+          os-arch: x86_64
+          os-plat: linux
+      - name: Use protoc
+        run: echo "Installed ${{ steps.install-protoc.outputs.version }} at ${{ steps.install-protoc.outputs.path }}"
